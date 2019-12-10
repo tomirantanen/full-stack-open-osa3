@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 3001;
 morgan.token("body", (request, response) => JSON.stringify(request.body));
 
+app.use(express.static("build"));
 app.use(bodyParser.json());
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
