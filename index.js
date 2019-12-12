@@ -13,6 +13,9 @@ const logger = morgan(
 
 const errorHandler = (error, request, response, next) => {
   console.error(error);
+  if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
+  }
   response.status(404).end();
 };
 
@@ -24,7 +27,7 @@ app.use(express.static("build"));
 app.use(bodyParser.json());
 app.use(logger);
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
   Person.find({})
     .then(persons => {
       response.send(
@@ -36,7 +39,7 @@ app.get("/info", (request, response) => {
     .catch(error => next(error));
 });
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", (request, response, next) => {
   Person.find({})
     .then(persons => {
       response.json(persons.map(person => person.toJSON()));
@@ -44,15 +47,8 @@ app.get("/api/persons", (request, response) => {
     .catch(error => next(error));
 });
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
-
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error: "Request missing data"
-    });
-  }
-
   const person = new Person({
     name: body.name,
     number: body.number
@@ -88,7 +84,7 @@ app.put("/api/persons/:id", (request, response, next) => {
     .catch(error => next(error));
 });
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then(result => {
       response.status(204).end();
