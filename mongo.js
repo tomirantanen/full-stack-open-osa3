@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
-const arguments = process.argv;
-if (arguments.length < 3 || arguments.length === 4) {
+const args = process.argv;
+if (args.length < 3 || args.length === 4) {
   console.log("Missing arguments");
   process.exit(1);
-} else if (arguments.length > 5) {
+} else if (args.length > 5) {
   console.log("Too many arguments");
   process.exit(1);
 }
 
-const url = `mongodb+srv://fullstack:${arguments[2]}@cluster0-3dnvg.mongodb.net/phonebook?retryWrites=true&w=majority`;
+const url = `mongodb+srv://fullstack:${args[2]}@cluster0-3dnvg.mongodb.net/phonebook?retryWrites=true&w=majority`;
 
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -21,7 +21,7 @@ const personSchema = new mongoose.Schema({
 });
 const Person = mongoose.model("Person", personSchema);
 
-if (arguments.length === 3) {
+if (args.length === 3) {
   Person.find({}).then(result => {
     console.log("Phonebook:");
     result.forEach(person => {
@@ -29,12 +29,12 @@ if (arguments.length === 3) {
     });
     mongoose.connection.close();
   });
-} else if (arguments.length === 5) {
+} else if (args.length === 5) {
   const person = new Person({
-    name: arguments[3],
-    number: arguments[4]
+    name: args[3],
+    number: args[4]
   });
-  person.save().then(response => {
+  person.save().then(() => {
     console.log(`Added ${person.name} ${person.number} to phonebook`);
     mongoose.connection.close();
   });

@@ -13,7 +13,7 @@ const options = {
 
 mongoose
   .connect(url, options)
-  .then(result => console.log("connected"))
+  .then(() => console.log("connected"))
   .catch(error => console.error(error));
 
 const personSchema = new mongoose.Schema({
