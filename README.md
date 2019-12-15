@@ -7,6 +7,8 @@ API: https://full-stack-open-osa3.herokuapp.com/api/persons
 
 ## Running locally
 
+Create `.env` file containing Mongo database uri. Use the `.env.example` as a reference.
+
 ```
 npm install
 npm start
@@ -30,4 +32,10 @@ npm run build:ui
 heroku login
 heroku create
 npm run deploy
+```
+
+Add environment variables to Heroku:
+
+```
+heroku config:set MONGODB_URI='set-your-db-uri-here'
 ```
